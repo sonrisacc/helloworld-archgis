@@ -3,9 +3,8 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
-
 export class AppComponent {
   // Set our map properties
   mapCenter = [-122.4194, 37.7749];
@@ -17,4 +16,3 @@ export class AppComponent {
     console.log('The map loaded: ' + status);
   }
 }
-

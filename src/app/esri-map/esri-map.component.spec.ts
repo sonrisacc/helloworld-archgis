@@ -9,9 +9,8 @@ describe('EsriMapComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [EsriMapComponent]
-    })
-      .compileComponents();
+      declarations: [EsriMapComponent],
+    }).compileComponents();
     fixture = TestBed.createComponent(EsriMapComponent);
     app = fixture.debugElement.componentInstance;
     component = fixture.componentInstance;
@@ -28,5 +27,4 @@ describe('EsriMapComponent', () => {
     expect(app.zoom).toEqual(jasmine.any(Number));
     expect(app.mapLoaded).toEqual(false);
   });
-
 });

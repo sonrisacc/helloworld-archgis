@@ -1,0 +1,21 @@
+{
+  "extends": ["ddts"],
+  "linterOptions": {
+    "exclude": ["dist/"]
+  },
+  "rules": {
+    "import-blacklist": [true, ["utils/debug/*"]],
+    "no-duplicate-variable": true,
+    "no-duplicate-imports": true,
+    "no-internal-module": true,
+    "no-switch-case-fall-through": true,
+    "no-var-requires": false,
+    "no-trailing-whitespace": false,
+    "semicolon": true,
+    "only-arrow-functions": false,
+    "object-literal-sort-keys": false,
+    "no-require-imports": false,
+    "no-unused-expression": false,
+    "switch-default": false
+  }
+}

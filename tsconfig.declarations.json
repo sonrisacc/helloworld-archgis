@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "module": "es2015",
+    "noEmit": false,
+    "outDir": "./dist/",
+    "removeComments": false,
+    "target": "esnext"
+  },
+  "extends": "./tsconfig.json"
+}

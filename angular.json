@@ -3,28 +3,37 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "esri-map-v1": {
+    "angular-cli-esri-map": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-builders/custom-webpack:browser",
           "options": {
-            "outputPath": "dist/esri-map-v1",
+            "customWebpackConfig": {
+              "path": "./extra-webpack.config.js"
+            },
+            "outputPath": "dist/angular-cli-esri-map",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-            "aot": true,
+            "optimization": true,
+            "aot": false,
+            "vendorChunk": false,
             "assets": [
               "src/favicon.ico",
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.scss"
             ],
             "scripts": []
           },
@@ -41,6 +50,7 @@
               "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
+              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
@@ -60,25 +70,28 @@
           }
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
-            "browserTarget": "esri-map-v1:build"
+            "browserTarget": "angular-cli-esri-map:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "esri-map-v1:build:production"
+              "browserTarget": "angular-cli-esri-map:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "esri-map-v1:build"
+            "browserTarget": "angular-cli-esri-map:build"
           }
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+          "builder": "@angular-builders/custom-webpack:karma",
           "options": {
+            "customWebpackConfig": {
+              "path": "./extra-webpack.config.js"
+            },
             "main": "src/test.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
@@ -88,7 +101,7 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.scss"
             ],
             "scripts": []
           }
@@ -110,15 +123,15 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "esri-map-v1:serve"
+            "devServerTarget": "angular-cli-esri-map:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "esri-map-v1:serve:production"
+              "devServerTarget": "angular-cli-esri-map:serve:production"
             }
           }
         }
       }
     }},
-  "defaultProject": "esri-map-v1"
+  "defaultProject": "angular-cli-esri-map"
 }

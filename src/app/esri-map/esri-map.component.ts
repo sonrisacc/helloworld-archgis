@@ -11,27 +11,27 @@
   limitations under the License.
 */
 
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, Input, Output, EventEmitter } from "@angular/core";
 import Map from "esri/Map";
 import MapView from "esri/views/MapView";
 
 @Component({
-  selector: 'app-esri-map',
-  templateUrl: './esri-map.component.html',
-  styleUrls: ['./esri-map.component.scss']
+  selector: "app-esri-map",
+  templateUrl: "./esri-map.component.html",
+  styleUrls: ["./esri-map.component.scss"]
 })
 export class EsriMapComponent implements OnInit, OnDestroy {
 
   @Output() mapLoadedEvent = new EventEmitter<boolean>();
 
   // The <div> where we will place the map
-  @ViewChild('mapViewNode', { static: true }) private mapViewEl: ElementRef;
+  @ViewChild("mapViewNode", { static: true }) private mapViewEl: ElementRef;
 
   private _zoom = 10;
   private _center: Array<number> = [0.1278, 51.5074];
-  private _basemap = 'streets';
+  private _basemap = "streets";
   private _loaded = false;
-  private _view: MapView = null; 
+  private _view: MapView = null;
 
   get mapLoaded(): boolean {
     return this._loaded;
@@ -80,13 +80,13 @@ export class EsriMapComponent implements OnInit, OnDestroy {
         container: this.mapViewEl.nativeElement,
         center: this._center,
         zoom: this._zoom,
-        map: map
+        map
       };
 
       this._view = new MapView(mapViewProperties);
-      
+
       // wait for the map to load
-      await this._view.when(); 
+      await this._view.when();
       return this._view;
   }
 
@@ -94,14 +94,14 @@ export class EsriMapComponent implements OnInit, OnDestroy {
     // Initialize MapView and return an instance of MapView
     this.initializeMap().then((mapView) => {
       // The map has been initialized
-      console.log('mapView ready: ', mapView.ready);
+      console.log("mapView ready: ", mapView.ready);
       this._loaded = mapView.ready;
       this.mapLoadedEvent.emit(true);
     });
   }
 
   ngOnDestroy() {
-    if (this._view){
+    if (this._view) {
       this._view.container = null;
     }
   }

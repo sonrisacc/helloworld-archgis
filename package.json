@@ -53,5 +53,10 @@
     "webpack-node-externals": "^1.7.2",
     "yargs": "^14.2.0",
     "yarnhook": "^0.4.1"
+  },
+  "dependencies": {
+    "@types/arcgis-js-api": "^4.15.0",
+    "arcgis-js-api": "^4.15.2",
+    "maquette-jsx": "^2.1.1"
   }
 }

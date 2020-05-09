@@ -23,6 +23,7 @@ import {
 } from '@angular/core';
 import Map from 'esri/Map';
 import MapView from 'esri/views/MapView';
+import SceneView from 'esri/views/SceneView';
 
 @Component({
   selector: 'app-esri-map',
@@ -37,9 +38,10 @@ export class EsriMapComponent implements OnInit, OnDestroy {
 
   private _zoom = 10;
   private _center: Array<number> = [0.1278, 51.5074];
-  private _basemap = 'streets';
+  private _basemap = 'topo-vector';
   private _loaded = false;
-  private _view: MapView = null;
+  private _view: SceneView = null;
+  private _ground = 'world-elevation';
 
   get mapLoaded(): boolean {
     return this._loaded;
@@ -78,6 +80,7 @@ export class EsriMapComponent implements OnInit, OnDestroy {
     // Configure the Map
     const mapProperties = {
       basemap: this._basemap,
+      ground: this._ground,
     };
 
     const map = new Map(mapProperties);
@@ -85,12 +88,21 @@ export class EsriMapComponent implements OnInit, OnDestroy {
     // Initialize the MapView
     const mapViewProperties = {
       container: this.mapViewEl.nativeElement,
-      center: this._center,
-      zoom: this._zoom,
+      camera: {
+        position: {
+          // observation point
+          x: -118.808,
+          y: 33.961,
+          z: 25000, // altitude in meters
+        },
+        tilt: 65, // perspective in degrees
+      },
+      // center: this._center,
+      // zoom: this._zoom,
       map,
     };
 
-    this._view = new MapView(mapViewProperties);
+    this._view = new SceneView(mapViewProperties);
 
     // wait for the map to load
     await this._view.when();

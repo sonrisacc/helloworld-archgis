@@ -1,10 +1,8 @@
 {
-  "extends": ["ddts"],
   "linterOptions": {
     "exclude": ["dist/"]
   },
   "rules": {
-    "import-blacklist": [true, ["utils/debug/*"]],
     "no-duplicate-variable": true,
     "no-duplicate-imports": true,
     "no-internal-module": true,

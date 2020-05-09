@@ -1,1 +1,2 @@
-console.log('hello');
+// add styles
+import './index.css';

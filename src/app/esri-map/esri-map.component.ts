@@ -22,15 +22,11 @@ import {
   EventEmitter,
 } from '@angular/core';
 import Map from 'esri/Map';
-import MapView from 'esri/views/MapView';
+
 import SceneView from 'esri/views/SceneView';
 
-import BasemapToggle from 'esri/widgets/BasemapToggle';
-import BasemapGallery from 'esri/widgets/BasemapGallery';
-
-import FeatureLayer from 'esri/layers/FeatureLayer';
-import GraphicsLayer from 'esri/layers/GraphicsLayer';
-import Graphic from 'esri/Graphic';
+import WebScene from 'esri/WebScene';
+import BuildingSceneLayer from 'esri/layers/BuildingSceneLayer';
 
 @Component({
   selector: 'app-esri-map',
@@ -92,26 +88,30 @@ export class EsriMapComponent implements OnInit, OnDestroy {
     };
 
     const map = new Map(mapProperties);
-    const featureLayer = new FeatureLayer({
-      url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trailheads/FeatureServer/0"
+
+
+    const webscene = new WebScene({
+      portalItem: {
+        id: "c7470b0e4e4c44288cf287d658155300"
+      }
     });
-    map.add(featureLayer);
 
 
     // Init scene view
     const sceneViewProperties = {
       container: this.mapViewEl.nativeElement,
-      camera: {
-        position: {
-          // observation point
-          x: -118.808,
-          y: 33.961,
-          z: 25000, // altitude in meters
-        },
-        tilt: 65, // perspective in degrees
-      },
-      map,
+      map: webscene,
     };
+
+    // Create the BuildingSceneLayer and add it to the webscene
+    const buildingLayer = new BuildingSceneLayer({
+      url:
+        "https://tiles.arcgis.com/tiles/V6ZHFr6zdgNZuVG0/arcgis/rest/services/BSL__4326__US_Redlands__EsriAdminBldg_PublicDemo/SceneServer",
+      title: "Administration Building, Redlands - Building Scene Layer"
+    });
+    webscene.layers.add(buildingLayer);
+
+
 
     this._view = new SceneView(sceneViewProperties);
 

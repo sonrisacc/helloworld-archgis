@@ -1,2 +1,12 @@
 <!-- Here's the DIV that we inject the map into -->
+<div class="scene-service-input">
+    <div>
+        <input type="text" [(ngModel)]="sceneServiceUrl"/>
+        <button (click)="loadUrl()">Load Building</button>
+    </div>
+    <div>
+        <input type="text" [(ngModel)]="scenePortalId"/>
+        <button (click)="initializeMap()">Load Scene Portal</button>
+    </div>
+</div>
 <div #mapViewNode></div>

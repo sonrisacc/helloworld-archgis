@@ -20,31 +20,35 @@ import {
   Input,
   Output,
   EventEmitter,
-} from '@angular/core';
-import Map from 'esri/Map';
+} from "@angular/core";
+import Map from "esri/Map";
 
-import SceneView from 'esri/views/SceneView';
+import SceneView from "esri/views/SceneView";
 
-import WebScene from 'esri/WebScene';
-import BuildingSceneLayer from 'esri/layers/BuildingSceneLayer';
+import WebScene from "esri/WebScene";
+import BuildingSceneLayer from "esri/layers/BuildingSceneLayer";
 
 @Component({
-  selector: 'app-esri-map',
-  templateUrl: './esri-map.component.html',
-  styleUrls: ['./esri-map.component.scss'],
+  selector: "app-esri-map",
+  templateUrl: "./esri-map.component.html",
+  styleUrls: ["./esri-map.component.scss"],
 })
 export class EsriMapComponent implements OnInit, OnDestroy {
   @Output() mapLoadedEvent = new EventEmitter<boolean>();
 
   // The <div> where we will place the map
-  @ViewChild('mapViewNode', { static: true }) private mapViewEl: ElementRef;
+  @ViewChild("mapViewNode", { static: true }) private mapViewEl: ElementRef;
 
+  scenePortalId = "b2cc14f4814a4e17882b402b2ba582ff";
+  sceneServiceUrl = "https://tiles.arcgis.com/tiles/bUER1uRVQEMShPaY/arcgis/rest/services/building5/SceneServer";
+  buildingLayer: any;
+  webscene: any;
   private _zoom = 13;
   private _center: Array<number> = [-118.805, 34.027]; // longitude, latitude
-  private _basemap = 'topo-vector';
+  private _basemap = "topo-vector";
   private _loaded = false;
   private _view: SceneView = null;
-  private _ground = 'world-elevation';
+  private _ground = "world-elevation";
 
   get mapLoaded(): boolean {
     return this._loaded;
@@ -88,10 +92,12 @@ export class EsriMapComponent implements OnInit, OnDestroy {
     // };
 
     // const map = new Map(mapProperties);
-
-    const webscene = new WebScene({
+    if (this.webscene) {
+      this.webscene.destroy();
+    }
+    this.webscene = new WebScene({
       portalItem: {
-        id: "b2cc14f4814a4e17882b402b2ba582ff"
+        id: this.scenePortalId,
       }
     });
 
@@ -99,18 +105,11 @@ export class EsriMapComponent implements OnInit, OnDestroy {
     // // Init scene view
     const sceneViewProperties = {
       container: this.mapViewEl.nativeElement,
-      map:webscene,
+      map: this.webscene,
     };
 
     // Create the BuildingSceneLayer and add it to the webscene
-    const buildingLayer = new BuildingSceneLayer({
-      url:
-      "https://tiles.arcgis.com/tiles/bUER1uRVQEMShPaY/arcgis/rest/services/building5/SceneServer",
-      title: "building5"
-    });
-    webscene.layers.add(buildingLayer);
-
-
+    this.loadUrl();
 
     this._view = new SceneView(sceneViewProperties);
 
@@ -119,11 +118,27 @@ export class EsriMapComponent implements OnInit, OnDestroy {
     return this._view;
   }
 
+  loadScenePortal() {
+
+  }
+
+  loadUrl() {
+    if (this.buildingLayer) {
+      this.webscene.layers.remove(this.buildingLayer);
+    }
+    this.buildingLayer = new BuildingSceneLayer({
+      url:
+      this.sceneServiceUrl,
+      title: "building5"
+    });
+    this.webscene.layers.add(this.buildingLayer);
+  }
+
   ngOnInit() {
     // Initialize MapView and return an instance of MapView
     this.initializeMap().then((mapView) => {
       // The map has been initialized
-      console.log('mapView ready: ', mapView.ready);
+      console.log("mapView ready: ", mapView.ready);
       this._loaded = mapView.ready;
       this.mapLoadedEvent.emit(true);
 

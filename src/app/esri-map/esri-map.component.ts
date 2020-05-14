@@ -81,33 +81,32 @@ export class EsriMapComponent implements OnInit, OnDestroy {
 
   async initializeMap() {
     // Configure the Map
-    console.log('this map', this._basemap);
-    const mapProperties = {
-      basemap: this._basemap,
-      ground: this._ground,
-    };
+    // console.log('this map', this._basemap);
+    // const mapProperties = {
+    //   basemap: this._basemap,
+    //   ground: this._ground,
+    // };
 
-    const map = new Map(mapProperties);
-
+    // const map = new Map(mapProperties);
 
     const webscene = new WebScene({
       portalItem: {
-        id: "c7470b0e4e4c44288cf287d658155300"
+        id: "b2cc14f4814a4e17882b402b2ba582ff"
       }
     });
 
 
-    // Init scene view
+    // // Init scene view
     const sceneViewProperties = {
       container: this.mapViewEl.nativeElement,
-      map: webscene,
+      map:webscene,
     };
 
     // Create the BuildingSceneLayer and add it to the webscene
     const buildingLayer = new BuildingSceneLayer({
       url:
-        "https://tiles.arcgis.com/tiles/V6ZHFr6zdgNZuVG0/arcgis/rest/services/BSL__4326__US_Redlands__EsriAdminBldg_PublicDemo/SceneServer",
-      title: "Administration Building, Redlands - Building Scene Layer"
+      "https://tiles.arcgis.com/tiles/bUER1uRVQEMShPaY/arcgis/rest/services/building5/SceneServer",
+      title: "building5"
     });
     webscene.layers.add(buildingLayer);
 

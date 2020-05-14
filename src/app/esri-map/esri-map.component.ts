@@ -11,27 +11,44 @@
   limitations under the License.
 */
 
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, Input, Output, EventEmitter } from "@angular/core";
-import Map from "esri/Map";
-import MapView from "esri/views/MapView";
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+  ElementRef,
+  Input,
+  Output,
+  EventEmitter,
+} from '@angular/core';
+import Map from 'esri/Map';
+import MapView from 'esri/views/MapView';
+import SceneView from 'esri/views/SceneView';
+
+import BasemapToggle from 'esri/widgets/BasemapToggle';
+import BasemapGallery from 'esri/widgets/BasemapGallery';
+
+import FeatureLayer from 'esri/layers/FeatureLayer';
+import GraphicsLayer from 'esri/layers/GraphicsLayer';
+import Graphic from 'esri/Graphic';
 
 @Component({
-  selector: "app-esri-map",
-  templateUrl: "./esri-map.component.html",
-  styleUrls: ["./esri-map.component.scss"]
+  selector: 'app-esri-map',
+  templateUrl: './esri-map.component.html',
+  styleUrls: ['./esri-map.component.scss'],
 })
 export class EsriMapComponent implements OnInit, OnDestroy {
-
   @Output() mapLoadedEvent = new EventEmitter<boolean>();
 
   // The <div> where we will place the map
-  @ViewChild("mapViewNode", { static: true }) private mapViewEl: ElementRef;
+  @ViewChild('mapViewNode', { static: true }) private mapViewEl: ElementRef;
 
-  private _zoom = 10;
-  private _center: Array<number> = [0.1278, 51.5074];
-  private _basemap = "streets";
+  private _zoom = 13;
+  private _center: Array<number> = [-118.805, 34.027]; // longitude, latitude
+  private _basemap = 'topo-vector';
   private _loaded = false;
-  private _view: MapView = null;
+  private _view: SceneView = null;
+  private _ground = 'world-elevation';
 
   get mapLoaded(): boolean {
     return this._loaded;
@@ -64,39 +81,53 @@ export class EsriMapComponent implements OnInit, OnDestroy {
     return this._basemap;
   }
 
-  constructor() { }
+  constructor() {}
 
   async initializeMap() {
+    // Configure the Map
+    console.log('this map', this._basemap);
+    const mapProperties = {
+      basemap: this._basemap,
+      ground: this._ground,
+    };
 
-      // Configure the Map
-      const mapProperties = {
-        basemap: this._basemap
-      };
+    const map = new Map(mapProperties);
+    const featureLayer = new FeatureLayer({
+      url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trailheads/FeatureServer/0"
+    });
+    map.add(featureLayer);
 
-      const map = new Map(mapProperties);
 
-      // Initialize the MapView
-      const mapViewProperties = {
-        container: this.mapViewEl.nativeElement,
-        center: this._center,
-        zoom: this._zoom,
-        map
-      };
+    // Init scene view
+    const sceneViewProperties = {
+      container: this.mapViewEl.nativeElement,
+      camera: {
+        position: {
+          // observation point
+          x: -118.808,
+          y: 33.961,
+          z: 25000, // altitude in meters
+        },
+        tilt: 65, // perspective in degrees
+      },
+      map,
+    };
 
-      this._view = new MapView(mapViewProperties);
+    this._view = new SceneView(sceneViewProperties);
 
-      // wait for the map to load
-      await this._view.when();
-      return this._view;
+    // wait for the map to load
+    await this._view.when();
+    return this._view;
   }
 
   ngOnInit() {
     // Initialize MapView and return an instance of MapView
     this.initializeMap().then((mapView) => {
       // The map has been initialized
-      console.log("mapView ready: ", mapView.ready);
+      console.log('mapView ready: ', mapView.ready);
       this._loaded = mapView.ready;
       this.mapLoadedEvent.emit(true);
+
     });
   }
 
